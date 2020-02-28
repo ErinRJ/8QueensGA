@@ -8,23 +8,28 @@ def fitness(number, chromes):
     # loop through each chromosome, evaluate the fitness of each, add to fitness array
     for chromosome in chromes:
         print(chromosome)
+        # find out the vertical and diagonal fitness values
         vertFit = vertical(chromosome)
-        diaFit = diagonal()
+        print("The returned fitness value for vertical: " + str(vertFit))
+        diaFit = diagonal(chromosome)
+        print("The returned fitness value for diagonal: " + str(diaFit))
 
-        # total = vertFit + diaFit
+        totalFit = vertFit + diaFit
         # totalFitness.append(total, axis=0)
 
     print("fitness() should return an array of fitness values")
 
+
 def roulette(chromes, fitness):
     print("Pair up chromosomes, return array of pairs")
+
 
 # verify there are no queens vertically
 # SOLUTION: By checking if the numbers have not been repeated, if it has been repeated there are queens in the same column
 # parameter - chromosome: the one chromosome from the total population
 def vertical(chromosome):
-    numOfRepeat = 0 # the total number of genes that were repeated
-    count = 0 # used to count the number of genes within that choromsome
+    numOfRepeat = 0  # the total number of genes that were repeated
+    count = 0  # used to count the number of genes within that choromsome
 
     # Goes through 0-7 and checks if the gene has been created more than once
     for i in range(len(chromosome)):
@@ -36,24 +41,26 @@ def vertical(chromosome):
         # if a value was repeated more than once it is added to the numOfRepeat
         if count > 1:
             numOfRepeat = numOfRepeat + count
-            print("numOfRepeat: " + str(numOfRepeat) + "\n")
         count = 0
 
-    print("numOfRepeat: " + str(numOfRepeat))
-
     # return vertical fitness value
-    return numOfRepeat;
-    # if (numOfRepeat == 0):
-    #     return 5
-    # elif (numOfRepeat < 5 and numOfRepeat > 0):
-    #     return 3
-    # else:
-    #     return 0
+    return numOfRepeat
 
 
-# verify there are no queens diagonally
-def diagonal():
-    print("Diagonal fitness test performed here")
+# verify the diagonal fitness
+def diagonal(chromosome):
+    fitness = 0
+    for i in range(len(chromosome)):
+        # loop though every gene > the current gene
+        for j in range(i+1, len(chromosome)):
+            # find slope each
+            slopeX = abs(i - j)
+            slopeY = abs(chromosome[i] - chromosome[j])
+
+            #if the two slopes match, the two queens are on each other's diagonal paths
+            if(slopeY == slopeX):
+                fitness = fitness + 1
+    return(fitness)
 
 
 # crossover operation
@@ -67,7 +74,6 @@ def mutation():
 
 
 def find_solution(number, g, chromes):
-
     # evaluate chromosome fitness
     fitnessArray = fitness(number, chromes)
     # if all queens in one chromosome do not interfere with each other --> SOLUTION IS FOUND
@@ -80,8 +86,6 @@ def find_solution(number, g, chromes):
 
     # perform mutation (if needed)
     # mutation()
-
-
 
 
 if __name__ == '__main__':
@@ -103,5 +107,3 @@ if __name__ == '__main__':
     find_solution(n, genes, chromosomes)
 
     # test section - try what you need here!
-    
-
