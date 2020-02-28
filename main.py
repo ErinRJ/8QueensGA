@@ -7,12 +7,12 @@ def fitness(number, chromes):
 
     # loop through each chromosome, evaluate the fitness of each, add to fitness array
     for chromosome in chromes:
+        print(chromosome)
         vertFit = vertical(chromosome)
-        horiFit = horizontal()
         diaFit = diagonal()
 
-        total = vertFit + horiFit + diaFit
-        totalFitness.append(total, axis=0)
+        # total = vertFit + diaFit
+        # totalFitness.append(total, axis=0)
 
     print("fitness() should return an array of fitness values")
 
@@ -23,16 +23,14 @@ def roulette(chromes, fitness):
 # SOLUTION: By checking if the numbers have not been repeated, if it has been repeated there are queens in the same column
 # parameter - chromosome: the one chromosome from the total population
 def vertical(chromosome):
-    print("Performing Vertical fitness test")
-
     numOfRepeat = 0 # the total number of genes that were repeated
     count = 0 # used to count the number of genes within that choromsome
 
     # Goes through 0-7 and checks if the gene has been created more than once
     for i in range(len(chromosome)):
         for genes in chromosome:
+            # check if this gene == another gene
             if genes == i:
-                print("i: " + str(i) + " genes: " + str(genes))
                 count = count + 1
 
         # if a value was repeated more than once it is added to the numOfRepeat
@@ -44,20 +42,13 @@ def vertical(chromosome):
     print("numOfRepeat: " + str(numOfRepeat))
 
     # return vertical fitness value
-    if (numOfRepeat == 0):
-        return 5
-    elif (numOfRepeat < 5 and numOfRepeat > 0):
-        return 3
-    else:
-        return 0
-
-    
-
-
-# verify there are no queens horizontally
-def horizontal():
-
-    print("Horizontal fitness test performed here")
+    return numOfRepeat;
+    # if (numOfRepeat == 0):
+    #     return 5
+    # elif (numOfRepeat < 5 and numOfRepeat > 0):
+    #     return 3
+    # else:
+    #     return 0
 
 
 # verify there are no queens diagonally
@@ -79,7 +70,6 @@ def find_solution(number, g, chromes):
 
     # evaluate chromosome fitness
     fitnessArray = fitness(number, chromes)
-
     # if all queens in one chromosome do not interfere with each other --> SOLUTION IS FOUND
 
     # using the fitness values gathered, perform roulette-wheel
@@ -108,10 +98,9 @@ if __name__ == '__main__':
 
     # randomly generate n chromosomes, organize in an array
     chromosomes = np.random.randint(8, size=(n, genes))
-    print(chromosomes)
 
     # surround the following function call in a while loop which breaks once a solution is found
-    # find_solution(n, genes, chromosomes)
+    find_solution(n, genes, chromosomes)
 
     # test section - try what you need here!
     
