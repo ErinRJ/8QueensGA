@@ -1,54 +1,50 @@
 import numpy as np
 
-class Chromosome:
-    # initializing the chromosomes
-    def __init__(self):
-        # randomly generate n chromosomes, organize in an array
-        self.chromo = np.random.randint(8, size=(n, genes))
 
-    # fitness function
-    def fitness(number, chromes):
-        totalFitness = np.empty((number), int)
+# fitness function
+def fitness(number, chromes):
+    totalFitness = np.empty((number), int)
 
-        # loop through each chromosome, evaluate the fitness of each, add to fitness array
-        for chromosome in chromes:
-            vertFit = vertical()
-            horiFit = horizontal()
-            diaFit = diagonal()
+    # loop through each chromosome, evaluate the fitness of each, add to fitness array
+    for chromosome in chromes:
+        vertFit = vertical()
+        horiFit = horizontal()
+        diaFit = diagonal()
 
-            total = vertFit + horiFit + diaFit
-            totalFitness.append(total, axis=0)
+        total = vertFit + horiFit + diaFit
+        totalFitness.append(total, axis=0)
 
-        print("fitness() should return an array of fitness values")
+    print("fitness() should return an array of fitness values")
 
-    def roulette(chromes, fitness):
-        print("Pair up chromosomes, return array of pairs")
+def roulette(chromes, fitness):
+    print("Pair up chromosomes, return array of pairs")
 
-    # verify there are no queens vertically
-    # SOLUTION: By checking if the numbers have not been repeated, if it has been repeated there are queens in the same column
-    def vertical():
-
-        print("Vertical fitness test performed here")
+# verify there are no queens vertically
+# SOLUTION: By checking if the numbers have not been repeated, if it has been repeated there are queens in the same column
+def vertical():
+    
+    print("Vertical fitness test performed here")
 
 
-    # verify there are no queens horizontally
-    def horizontal():
-        print("Horizontal fitness test performed here")
+# verify there are no queens horizontally
+def horizontal():
+
+    print("Horizontal fitness test performed here")
 
 
-    # verify there are no queens diagonally
-    def diagonal():
-        print("Diagonal fitness test performed here")
+# verify there are no queens diagonally
+def diagonal():
+    print("Diagonal fitness test performed here")
 
 
-    # crossover operation
-    def crossover():
-        print("Crossover is performed here")
+# crossover operation
+def crossover():
+    print("Crossover is performed here")
 
 
-    # mutation operation
-    def mutation():
-        print("Mutation is performed here")
+# mutation operation
+def mutation():
+    print("Mutation is performed here")
 
 
 def find_solution(number, g, chromes):
@@ -82,8 +78,9 @@ if __name__ == '__main__':
     # mutation probability
     pm = 0.001
 
-    chromosomes = Chromosome()
-    print(chromosomes.chromo)
+    # randomly generate n chromosomes, organize in an array
+    chromosomes = np.random.randint(8, size=(n, genes))
+    print(chromosomes)
 
     # surround the following function call in a while loop which breaks once a solution is found
     # find_solution(n, genes, chromosomes)
