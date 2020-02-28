@@ -7,7 +7,7 @@ def fitness(number, chromes):
 
     # loop through each chromosome, evaluate the fitness of each, add to fitness array
     for chromosome in chromes:
-        vertFit = vertical()
+        vertFit = vertical(chromosome)
         horiFit = horizontal()
         diaFit = diagonal()
 
@@ -21,9 +21,37 @@ def roulette(chromes, fitness):
 
 # verify there are no queens vertically
 # SOLUTION: By checking if the numbers have not been repeated, if it has been repeated there are queens in the same column
-def vertical():
+# parameter - chromosome: the one chromosome from the total population
+def vertical(chromosome):
+    print("Performing Vertical fitness test")
+
+    numOfRepeat = 0 # the total number of genes that were repeated
+    count = 0 # used to count the number of genes within that choromsome
+
+    # Goes through 0-7 and checks if the gene has been created more than once
+    for i in range(len(chromosome)):
+        for genes in chromosome:
+            if genes == i:
+                print("i: " + str(i) + " genes: " + str(genes))
+                count = count + 1
+
+        # if a value was repeated more than once it is added to the numOfRepeat
+        if count > 1:
+            numOfRepeat = numOfRepeat + count
+            print("numOfRepeat: " + str(numOfRepeat) + "\n")
+        count = 0
+
+    print("numOfRepeat: " + str(numOfRepeat))
+
+    # return vertical fitness value
+    if (numOfRepeat == 0):
+        return 5
+    elif (numOfRepeat < 5 and numOfRepeat > 0):
+        return 3
+    else:
+        return 0
+
     
-    print("Vertical fitness test performed here")
 
 
 # verify there are no queens horizontally
@@ -84,4 +112,7 @@ if __name__ == '__main__':
 
     # surround the following function call in a while loop which breaks once a solution is found
     # find_solution(n, genes, chromosomes)
+
+    # test section - try what you need here!
+    
 
