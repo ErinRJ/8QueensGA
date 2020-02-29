@@ -117,7 +117,7 @@ if __name__ == '__main__':
     # surround the following function call in a while loop which breaks once a solution is found
     # find_solution(n, genes, chromosomes)
 
-    # test section - try what you need here!
+    # test section-try what you need here!
     print("parent1: " + str(chromosomes[0]))
     print("parent2: " + str(chromosomes[1]))
 
