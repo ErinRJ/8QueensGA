@@ -75,7 +75,7 @@ def crossover(parent1, parent2):
     print("childOne: " + str(childOne))    # Delete this line later -> it's just for testing purposes
     print("childTwo: " + str(childTwo))    # Delete this line later -> it's just for testing purposes
 
-    # Not too sure what to return here though
+    # Not too sure how to return the children though 
     
 
 
