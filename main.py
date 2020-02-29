@@ -1,6 +1,7 @@
 import numpy as np
 
 
+
 # fitness function
 def fitness(number, chromes):
     totalFitness = np.empty((number), int)
@@ -64,8 +65,18 @@ def diagonal(chromosome):
 
 
 # crossover operation
-def crossover():
-    print("Crossover is performed here")
+# half of the genes from each parent crossover will switch with each other 
+def crossover(parent1, parent2):
+
+    # creating child chromosomes that have half of each of the parents genes
+    childOne = np.append(parent1[:4], parent2[4:len(parent2)])
+    childTwo = np.append(parent2[:4], parent1[4:len(parent1)])
+    
+    print("childOne: " + str(childOne))    # Delete this line later -> it's just for testing purposes
+    print("childTwo: " + str(childTwo))    # Delete this line later -> it's just for testing purposes
+
+    # Not too sure what to return here though
+    
 
 
 # mutation operation
@@ -104,6 +115,11 @@ if __name__ == '__main__':
     chromosomes = np.random.randint(8, size=(n, genes))
 
     # surround the following function call in a while loop which breaks once a solution is found
-    find_solution(n, genes, chromosomes)
+    # find_solution(n, genes, chromosomes)
 
     # test section - try what you need here!
+    print("parent1: " + str(chromosomes[0]))
+    print("parent2: " + str(chromosomes[1]))
+
+    
+    crossover(chromosomes[0],chromosomes[1])
