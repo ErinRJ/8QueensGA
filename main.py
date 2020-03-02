@@ -12,9 +12,7 @@ def fitness(chromes):
         print(chromosome)
         # find out the vertical and diagonal fitness values
         vertFit = vertical(chromosome)
-        print("The returned fitness value for vertical: " + str(vertFit))
         diaFit = diagonal(chromosome)
-        print("The returned fitness value for diagonal: " + str(diaFit))
 
         # finding the total fitness value and adding to the totalFitness array 
         chromoFit = vertFit + diaFit
@@ -26,9 +24,7 @@ def fitness(chromes):
         chromoFit=0
 
 
-    print("The chromosone fitness are: "+ str(totalFitness))
     addedValues= sum(totalFitness)
-    print("The sum total of fitness are: "+ str(addedValues))
     percentFit=[]
     for i in totalFitness:
         percentFit.append(round(((i/addedValues)), 4))
@@ -36,7 +32,6 @@ def fitness(chromes):
 
 # roulette fuction 
 def roulette(chromosomeFit):
-    print("\nReturn Pair")
     pair=[]
     cumulaarray = []
     cumulative = 0
@@ -59,7 +54,6 @@ def roulette(chromosomeFit):
             break
         index = index + 1
 
-    print("first selected chromosome is: " + str(parentOne))
     pair.append(parentOne)
 
     while (parentOne == parentOne):
@@ -77,9 +71,7 @@ def roulette(chromosomeFit):
         if (parenttwo != parentOne):
             break
 
-    print("second selected chromosome is: " + str(parenttwo))
     pair.append(parenttwo)
-    print(str(pair))
 
     return pair
 
@@ -115,7 +107,7 @@ def diagonal(chromosome):
     for i in range(len(chromosome)):
         # loop though every gene > the current gene
         for j in range(i + 1, len(chromosome)):
-            # find slope each
+            # find slope of each
             slopeX = abs(i - j)
             slopeY = abs(chromosome[i] - chromosome[j])
 
@@ -130,7 +122,8 @@ def diagonal(chromosome):
 # crossover operation
 # half of the genes from each parent crossover will switch with each other
 def crossover(parent1, parent2):
-    
+    print("\n -------Crossover is performed here-------")
+
     # selecting the index where the parents need to switch genes
     crossPoint = random.randint(1,7)
     
@@ -139,10 +132,12 @@ def crossover(parent1, parent2):
     childTwo = np.append(parent2[:crossPoint], parent1[crossPoint:len(parent1)])
 
     print("crosspoint: " + str(crossPoint))
-    print("childOne: " + str(childOne))  # Delete this line later -> it's just for testing purposes
-    print("childTwo: " + str(childTwo))  # Delete this line later -> it's just for testing purposes
+    print("ParentOne: " + str(parent1) + "childOne: " + str(childOne))  # Delete this line later -> it's just for testing purposes
+    print("ParentTwo: " + str(parent2) + "childTwo: " + str(childTwo))  # Delete this line later -> it's just for testing purposes
 
     # Not too sure how to return the children though
+    print("-------------End of Crossover-------------\n")
+
 
 
 # mutation operation
@@ -154,16 +149,26 @@ def mutation(chromosome):
     print("Gene to be mutated: " + str(mutated_gene))
     print("The original chromosome: " + str(chromosome))
 
+    # change its value to a random column
     chromosome[mutated_gene] = random.randint(0, 7)
     print("The mutated chromosome: " + str(chromosome))
 
     print("-------------End of Mutation-------------\n")
 
 
-def find_solution(number, g, chromes):
+def find_solution(population_size, g, chromes):
     # evaluate chromosome fitness
-    fitnessArray = fitness(number, chromes)
+    fitness_array = fitness(chromes)
+
     # if all queens in one chromosome do not interfere with each other --> SOLUTION IS FOUND
+    print("\n% Fitness for each chromosome: " + str(fitness_array))
+
+    for i in range(0, int(population_size/2)):
+        print("ROUND " + str(i) + ": Selected pair is" + str(roulette(fitness_array)))
+
+
+    crossover(chromosomes[0], chromosomes[1])
+    mutation(chromosomes[0])
 
     # using the fitness values gathered, perform roulette-wheel
     # roulette()
@@ -191,23 +196,7 @@ if __name__ == '__main__':
     chromosomes = np.random.randint(8, size=(n, genes))
 
     # surround the following function call in a while loop which breaks once a solution is found
-    # find_solution(n, genes, chromosomes)
+    find_solution(n, genes, chromosomes)
 
-    # test section-try what you need here!
-    print("parent1: " + str(chromosomes[0]))
-    print("parent2: " + str(chromosomes[1]))
-    print("parent3: " + str(chromosomes[2]))
-    print("parent4: " + str(chromosomes[3]))
-    print("parent5: " + str(chromosomes[4]))
-    print("parent6: " + str(chromosomes[5]))
-    print("parent7: " + str(chromosomes[6]))
-    print("parent8: " + str(chromosomes[7]))
-
-    crossover(chromosomes[0],chromosomes[1])
-    mutation(chromosomes[0])
-    t= fitness(chromosomes)
-    print("complete fitness for all is:" + str(t))
-    print("selected pair is"+str(roulette(t)))
-    #mutation(chromosomes[0])
 
 
