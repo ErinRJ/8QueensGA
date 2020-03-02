@@ -122,10 +122,15 @@ def diagonal(chromosome):
 # crossover operation
 # half of the genes from each parent crossover will switch with each other
 def crossover(parent1, parent2):
+    
+    # selecting the index where the parents need to switch genes
+    crossPoint = random.randint(1,7)
+    
     # creating child chromosomes that have half of each of the parents genes
-    childOne = np.append(parent1[:4], parent2[4:len(parent2)])
-    childTwo = np.append(parent2[:4], parent1[4:len(parent1)])
+    childOne = np.append(parent1[:crossPoint], parent2[crossPoint:len(parent2)])
+    childTwo = np.append(parent2[:crossPoint], parent1[crossPoint:len(parent1)])
 
+    print("crosspoint: " + str(crossPoint))
     print("childOne: " + str(childOne))  # Delete this line later -> it's just for testing purposes
     print("childTwo: " + str(childTwo))  # Delete this line later -> it's just for testing purposes
 
@@ -191,6 +196,7 @@ if __name__ == '__main__':
     print("parent7: " + str(chromosomes[6]))
     print("parent8: " + str(chromosomes[7]))
 
+    crossover(chromosomes[0],chromosomes[1])
 
     t= fitness(chromosomes)
     print("complete fitness for all is:" + str(t))
