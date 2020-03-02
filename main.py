@@ -1,11 +1,9 @@
 import numpy as np
-
-
+import random
 
 # fitness function
-def fitness(number, chromes):
-    totalFitness = np.empty((number), int)
-
+def fitness(chromes):
+    totalFitness = []
     # loop through each chromosome, evaluate the fitness of each, add to fitness array
     for chromosome in chromes:
         print(chromosome)
@@ -15,14 +13,68 @@ def fitness(number, chromes):
         diaFit = diagonal(chromosome)
         print("The returned fitness value for diagonal: " + str(diaFit))
 
-        totalFit = vertFit + diaFit
-        # totalFitness.append(total, axis=0)
+        chromoFit = vertFit + diaFit
+        totalFitness.append(chromoFit)
+        vertFit=0
+        diaFit=0
+        chromoFit=0
 
-    print("fitness() should return an array of fitness values")
+
+    print("The chromosone fitness are: "+ str(totalFitness))
+    Sum= sum(totalFitness)
+    print("The sum total of fitness are: "+ str(Sum))
+    percentFit=[]
+    for i in totalFitness:
+        percentFit.append(round(((i/Sum)), 4))
+    return  percentFit
 
 
-def roulette(chromes, fitness):
-    print("Pair up chromosomes, return array of pairs")
+def roulette(chromosomeFit):
+    print("\nReturn Pair")
+    pair=[]
+    cumulaarray = []
+    cumulative = 0
+    for i in chromosomeFit:
+        cumulative = cumulative + i
+        cumulative = round(cumulative, 4)
+        cumulaarray.append(cumulative)
+    #print(str(cumulaarray))
+
+    rndnumberSelect = random.randint(0, 101)
+    rndnumberSelect = rndnumberSelect / 100
+    #print(rndnumberSelect)
+
+    index = 0
+    for i in cumulaarray:
+        if i >= rndnumberSelect:
+            parentOne = index
+            parenttwo = parentOne
+            break
+        index = index + 1
+
+    print("first selected chromosome is: " + str(parentOne))
+    pair.append(parentOne)
+
+    while (parentOne == parentOne):
+        rndnumberSelect2 = random.randint(0, 101)
+        rndnumberSelect2 = rndnumberSelect2 / 100
+        #print(rndnumberSelect2)
+
+        index2 = 0
+        for i in cumulaarray:
+            if i >= rndnumberSelect2:
+                parenttwo = index2
+                break
+            index2 = index2 + 1
+
+        if (parenttwo != parentOne):
+            break
+
+    print("second selected chromosome is: " + str(parenttwo))
+    pair.append(parenttwo)
+    print(str(pair))
+
+    return pair
 
 
 # verify there are no queens vertically
@@ -44,8 +96,9 @@ def vertical(chromosome):
             numOfRepeat = numOfRepeat + count
         count = 0
 
+    numOfNoRepeat= 8-numOfRepeat
     # return vertical fitness value
-    return numOfRepeat
+    return numOfNoRepeat
 
 
 # verify the diagonal fitness
@@ -53,35 +106,46 @@ def diagonal(chromosome):
     fitness = 0
     for i in range(len(chromosome)):
         # loop though every gene > the current gene
-        for j in range(i+1, len(chromosome)):
+        for j in range(i + 1, len(chromosome)):
             # find slope each
             slopeX = abs(i - j)
             slopeY = abs(chromosome[i] - chromosome[j])
 
-            #if the two slopes match, the two queens are on each other's diagonal paths
-            if(slopeY == slopeX):
+            # if the two slopes match, the two queens are on each other's diagonal paths
+            if (slopeY == slopeX):
                 fitness = fitness + 1
-    return(fitness)
+
+    fitness=28-fitness
+    return (fitness)
 
 
 # crossover operation
-# half of the genes from each parent crossover will switch with each other 
+# half of the genes from each parent crossover will switch with each other
 def crossover(parent1, parent2):
-
     # creating child chromosomes that have half of each of the parents genes
     childOne = np.append(parent1[:4], parent2[4:len(parent2)])
     childTwo = np.append(parent2[:4], parent1[4:len(parent1)])
-    
-    print("childOne: " + str(childOne))    # Delete this line later -> it's just for testing purposes
-    print("childTwo: " + str(childTwo))    # Delete this line later -> it's just for testing purposes
 
-    # Not too sure how to return the children though 
-    
+    print("childOne: " + str(childOne))  # Delete this line later -> it's just for testing purposes
+    print("childTwo: " + str(childTwo))  # Delete this line later -> it's just for testing purposes
+
+    # Not too sure how to return the children though
 
 
 # mutation operation
-def mutation():
+def mutation(chromosome):
     print("Mutation is performed here")
+    #numbers of chromes to change
+    mutaStrength=random.randrange(1, 9)
+    print(mutaStrength)
+    mutaInd=np.random.choice(8, mutaStrength, replace=False)
+    mutaInd.sort()
+    print(mutaInd)
+
+    for i in mutaInd:
+        chromosome[i]=random.randrange(0, 8)
+
+    print(str(chromosome))
 
 
 def find_solution(number, g, chromes):
@@ -120,6 +184,17 @@ if __name__ == '__main__':
     # test section-try what you need here!
     print("parent1: " + str(chromosomes[0]))
     print("parent2: " + str(chromosomes[1]))
+    print("parent3: " + str(chromosomes[2]))
+    print("parent4: " + str(chromosomes[3]))
+    print("parent5: " + str(chromosomes[4]))
+    print("parent6: " + str(chromosomes[5]))
+    print("parent7: " + str(chromosomes[6]))
+    print("parent8: " + str(chromosomes[7]))
 
-    
-    crossover(chromosomes[0],chromosomes[1])
+
+    t= fitness(chromosomes)
+    print("complete fitness for all is:" + str(t))
+    print("selected pair is"+str(roulette(t)))
+    #mutation(chromosomes[0])
+
+
