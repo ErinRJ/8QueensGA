@@ -24,7 +24,7 @@ def fitness(chromes):
 
         # exit condition
         if(chromoFit == 36):
-            sys.exit("Solution has been found: " + str(chromoFit))
+            sys.exit("Solution has been found: " + str(chromosome))
 
 
         # reinitializing vertFit, diaFit and chromoFit to zero in order to be used for next iteration
@@ -42,45 +42,46 @@ def fitness(chromes):
 # roulette fuction
 def roulette(chromosomeFit):
     pair = []
-    cumula_array = []
+    wheelValues = []
     cumulative = 0
+    # loop through fitness values, round them, add to rounded array
     for i in chromosomeFit:
         cumulative = cumulative + i
         cumulative = round(cumulative, 4)
-        cumula_array.append(cumulative)
+        wheelValues.append(cumulative)
     # print("The cumulative array: " + str(cumulaarray))
 
     # point to the wheel
-    rndnumberSelect = random.randint(0, 101)
+    rndnumberSelect = random.uniform(0, sum(wheelValues))
     rndnumberSelect = rndnumberSelect / 100
     # print(rndnumberSelect)
 
     index = 0
-    for i in cumula_array:
+    for i in wheelValues:
         if i >= rndnumberSelect:
-            parentOne = index
-            parenttwo = parentOne
+            parent_one = index
+            parent_two = parent_one
             break
         index = index + 1
 
-    pair.append(parentOne)
+    pair.append(parent_one)
 
-    while (parentOne == parentOne):
+    while (parent_one == parent_two):
         rndnumberSelect2 = random.randint(0, 101)
         rndnumberSelect2 = rndnumberSelect2 / 100
         # print(rndnumberSelect2)
 
         index2 = 0
-        for i in cumula_array:
+        for i in wheelValues:
             if i >= rndnumberSelect2:
-                parenttwo = index2
+                parent_two = index2
                 break
             index2 = index2 + 1
 
-        if (parenttwo != parentOne):
+        if (parent_two != parent_one):
             break
 
-    pair.append(parenttwo)
+    pair.append(parent_two)
 
     return pair
 
@@ -230,11 +231,12 @@ if __name__ == '__main__':
     chromosomes = np.random.randint(8, size=(n, genes))
 
     # surround the following function call in a while loop which breaks once a solution is found
-
+    gen = 0
     while(True):
+        print("Generation: " + str(gen))
         new_gen = find_solution(n, genes, chromosomes, pc, pm)
         chromosomes = new_gen
-        print("the new chromosomes: " + str(chromosomes))
+        gen = gen + 1
 
 
 
