@@ -2,8 +2,11 @@ import numpy as np
 import random
 
 # fitness function
+# finds the fitness value for each chromosome and adds it to the totalFitness array
+# parameter - chromo --> The chromosomes in the population
+# return value - percentFit -->
 def fitness(chromes):
-    totalFitness = []
+    totalFitness = []   # Contains the fitness values of each chromosome
     # loop through each chromosome, evaluate the fitness of each, add to fitness array
     for chromosome in chromes:
         print(chromosome)
@@ -13,8 +16,11 @@ def fitness(chromes):
         diaFit = diagonal(chromosome)
         print("The returned fitness value for diagonal: " + str(diaFit))
 
+        # finding the total fitness value and adding to the totalFitness array 
         chromoFit = vertFit + diaFit
         totalFitness.append(chromoFit)
+
+        # reinitializing vertFit, diaFit and chromoFit to zero in order to be used for next iteration
         vertFit=0
         diaFit=0
         chromoFit=0
@@ -28,7 +34,7 @@ def fitness(chromes):
         percentFit.append(round(((i/Sum)), 4))
     return  percentFit
 
-
+# roulette fuction 
 def roulette(chromosomeFit):
     print("\nReturn Pair")
     pair=[]
@@ -76,10 +82,11 @@ def roulette(chromosomeFit):
 
     return pair
 
-
+# vertial function
 # verify there are no queens vertically
-# SOLUTION: By checking if the numbers have not been repeated, if it has been repeated there are queens in the same column
+# By checking if the numbers have not been repeated, if it has been repeated there are queens in the same column
 # parameter - chromosome: the one chromosome from the total population
+# return value - numOfNoRepeat: the number of times values have not been repeated (i.e. vertical fitness value)
 def vertical(chromosome):
     numOfRepeat = 0  # the total number of genes that were repeated
     count = 0  # used to count the number of genes within that choromsome
@@ -100,7 +107,7 @@ def vertical(chromosome):
     # return vertical fitness value
     return numOfNoRepeat
 
-
+# diagonal function
 # verify the diagonal fitness
 def diagonal(chromosome):
     fitness = 0
