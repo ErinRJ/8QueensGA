@@ -27,12 +27,12 @@ def fitness(chromes):
 
 
     print("The chromosone fitness are: "+ str(totalFitness))
-    Sum= sum(totalFitness)
-    print("The sum total of fitness are: "+ str(Sum))
+    addedValues= sum(totalFitness)
+    print("The sum total of fitness are: "+ str(addedValues))
     percentFit=[]
     for i in totalFitness:
-        percentFit.append(round(((i/Sum)), 4))
-    return  percentFit
+        percentFit.append(round(((i/addedValues)), 4))
+    return percentFit
 
 # roulette fuction 
 def roulette(chromosomeFit):
@@ -44,8 +44,9 @@ def roulette(chromosomeFit):
         cumulative = cumulative + i
         cumulative = round(cumulative, 4)
         cumulaarray.append(cumulative)
-    #print(str(cumulaarray))
+    # print("The cumulative array: " + str(cumulaarray))
 
+    # point to the wheel
     rndnumberSelect = random.randint(0, 101)
     rndnumberSelect = rndnumberSelect / 100
     #print(rndnumberSelect)
@@ -146,18 +147,17 @@ def crossover(parent1, parent2):
 
 # mutation operation
 def mutation(chromosome):
-    print("Mutation is performed here")
-    #numbers of chromes to change
-    mutaStrength=random.randrange(1, 9)
-    print(mutaStrength)
-    mutaInd=np.random.choice(8, mutaStrength, replace=False)
-    mutaInd.sort()
-    print(mutaInd)
+    print("\n -------------Mutation is performed here-------------")
 
-    for i in mutaInd:
-        chromosome[i]=random.randrange(0, 8)
+    # randomly pick a gene to mutate from the chromosome
+    mutated_gene = random.randrange(0, 7)
+    print("Gene to be mutated: " + str(mutated_gene))
+    print("The original chromosome: " + str(chromosome))
 
-    print(str(chromosome))
+    chromosome[mutated_gene] = random.randint(0, 7)
+    print("The mutated chromosome: " + str(chromosome))
+
+    print("-------------End of Mutation-------------\n")
 
 
 def find_solution(number, g, chromes):
@@ -204,7 +204,7 @@ if __name__ == '__main__':
     print("parent8: " + str(chromosomes[7]))
 
     crossover(chromosomes[0],chromosomes[1])
-
+    mutation(chromosomes[0])
     t= fitness(chromosomes)
     print("complete fitness for all is:" + str(t))
     print("selected pair is"+str(roulette(t)))
