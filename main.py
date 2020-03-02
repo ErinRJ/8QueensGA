@@ -122,7 +122,7 @@ def diagonal(chromosome):
 # crossover operation
 # half of the genes from each parent crossover will switch with each other
 def crossover(parent1, parent2):
-    print("\n -------Crossover is performed here-------")
+    # print("\n -------Crossover is performed here-------")
 
     # selecting the index where the parents need to switch genes
     crossPoint = random.randint(1,7)
@@ -131,12 +131,15 @@ def crossover(parent1, parent2):
     childOne = np.append(parent1[:crossPoint], parent2[crossPoint:len(parent2)])
     childTwo = np.append(parent2[:crossPoint], parent1[crossPoint:len(parent1)])
 
-    print("crosspoint: " + str(crossPoint))
-    print("ParentOne: " + str(parent1) + "childOne: " + str(childOne))  # Delete this line later -> it's just for testing purposes
-    print("ParentTwo: " + str(parent2) + "childTwo: " + str(childTwo))  # Delete this line later -> it's just for testing purposes
+    # print("crosspoint: " + str(crossPoint))
+    # print("ParentOne: " + str(parent1) + "childOne: " + str(childOne))  # Delete this line later -> it's just for testing purposes
+    # print("ParentTwo: " + str(parent2) + "childTwo: " + str(childTwo))  # Delete this line later -> it's just for testing purposes
 
-    # Not too sure how to return the children though
-    print("-------------End of Crossover-------------\n")
+    # format the children for return
+    children = np.array([childOne, childTwo])
+    # print("-------------End of Crossover-------------\n")
+    return children
+
 
 
 
@@ -156,7 +159,7 @@ def mutation(chromosome):
     print("-------------End of Mutation-------------\n")
 
 
-def find_solution(population_size, g, chromes):
+def find_solution(population_size, g, chromes, cross_prob, mut_prob):
     # evaluate chromosome fitness
     fitness_array = fitness(chromes)
 
@@ -167,11 +170,9 @@ def find_solution(population_size, g, chromes):
     new_generation = np.random.randint(8, size=(population_size, g))
 
     row = 0
-    # make five pairs from the original chromosomes + fitness values
+    # make five pairs from the original chromosomes & fitness values (using Roulette Wheel)
     for i in range(0, int(population_size/2)):
         selected = roulette(fitness_array)
-        print("From roulette: " + str(selected))
-        print("to be changed: " + str(chromes[selected[0]]) + " and " + str(chromes[selected[1]]))
 
         # add the selected values to the new_generation array
         new_generation[row] = chromes[selected[0]]
@@ -182,13 +183,16 @@ def find_solution(population_size, g, chromes):
     print("====== THE NEW GENERATION ======")
     print(str(new_generation))
 
-
-
-
-
-
-    crossover(chromosomes[0], chromosomes[1])
-    mutation(chromosomes[0])
+    # randomly generate a number (0 to 1), if this is less than cross_prob, do crossover
+    for i in range (0, population_size, 2):
+        rand = random.uniform(0, 1)
+        if(rand < cross_prob):
+            children = crossover(new_generation[i], new_generation[i+1])
+            # replace the children of the new generation with the crossed-over version
+            new_generation[i] = children[0]
+            new_generation[i+1] = children[1]
+    print("========= CROSSOVERED GENERATION =========")
+    print(new_generation)
 
     # using the fitness values gathered, perform roulette-wheel
     # roulette()
@@ -216,7 +220,7 @@ if __name__ == '__main__':
     chromosomes = np.random.randint(8, size=(n, genes))
 
     # surround the following function call in a while loop which breaks once a solution is found
-    find_solution(n, genes, chromosomes)
+    find_solution(n, genes, chromosomes, pc, pm)
 
 
 
