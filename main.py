@@ -145,18 +145,19 @@ def crossover(parent1, parent2):
 
 # mutation operation
 def mutation(chromosome):
-    print("\n -------------Mutation is performed here-------------")
+    # print("\n -------------Mutation is performed here-------------")
 
     # randomly pick a gene to mutate from the chromosome
     mutated_gene = random.randrange(0, 7)
-    print("Gene to be mutated: " + str(mutated_gene))
-    print("The original chromosome: " + str(chromosome))
+    # print("Gene to be mutated: " + str(mutated_gene))
+    # print("The original chromosome: " + str(chromosome))
 
     # change its value to a random column
     chromosome[mutated_gene] = random.randint(0, 7)
-    print("The mutated chromosome: " + str(chromosome))
+    # print("The mutated chromosome: " + str(chromosome))
+    # print("-------------End of Mutation-------------\n")
 
-    print("-------------End of Mutation-------------\n")
+    return chromosome
 
 
 def find_solution(population_size, g, chromes, cross_prob, mut_prob):
@@ -180,7 +181,7 @@ def find_solution(population_size, g, chromes, cross_prob, mut_prob):
         new_generation[row] = chromes[selected[1]]
         row = row + 1
 
-    print("====== THE NEW GENERATION ======")
+    print("====== THE SELECTED GENERATION ======")
     print(str(new_generation))
 
     # randomly generate a number (0 to 1), if this is less than cross_prob, do crossover
@@ -192,6 +193,15 @@ def find_solution(population_size, g, chromes, cross_prob, mut_prob):
             new_generation[i] = children[0]
             new_generation[i+1] = children[1]
     print("========= CROSSOVERED GENERATION =========")
+    print(new_generation)
+
+    # randomly generate a number (0 to 1), if this is less than mut_prob, do mutation
+    for i in range (0, population_size):
+        rand = random.uniform(0,1)
+        if (rand < mut_prob):
+            mutated_chromosome = mutation(new_generation[i])
+            new_generation[i] = mutated_chromosome
+    print("========= MUTATED GENERATION =========")
     print(new_generation)
 
     # using the fitness values gathered, perform roulette-wheel
@@ -214,7 +224,7 @@ if __name__ == '__main__':
     # crossover probability
     pc = 0.7
     # mutation probability
-    pm = 0.001
+    pm = 0.2
 
     # randomly generate n chromosomes, organize in an array
     chromosomes = np.random.randint(8, size=(n, genes))
