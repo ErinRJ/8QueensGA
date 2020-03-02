@@ -1,20 +1,18 @@
 import sys
-
-import numpy as np
 import random
 import decimal
+import numpy as np
 
 
-# fitness function
+# FITNESS FUNCTION
 # finds the fitness value for each chromosome and adds it to the totalFitness array
-# parameter - chromo --> The chromosomes in the population
-# return value - percentFit -->
+# parameter - chromo: The chromosomes in the population
+# return value - percentFit:
 def fitness(chromes):
     totalFitness = []  # Contains the fitness values of each chromosome
     # loop through each chromosome, evaluate the fitness of each, add to fitness array
     for chromosome in chromes:
-        # print("Chromosomes from fitness function: ")
-        # print(chromosome)
+        
         # find out the vertical and diagonal fitness values
         vertFit = vertical(chromosome)
         diaFit = diagonal(chromosome)
@@ -40,7 +38,10 @@ def fitness(chromes):
     return percentFit
 
 
-# roulette fuction
+# ROULETTE FUNCTION
+# Used to select the parents to be used in crossover or mutation
+# parameters - chromosomeFit: The fitness values of the chromosomes
+# returns - pair: the indices of the parents selected from the roulette wheel
 def roulette(chromosomeFit):
     pair = []           # the indices of the two parents that are choosen
     wheelValues = []    # the precentages in the wheel  
@@ -51,13 +52,9 @@ def roulette(chromosomeFit):
     # Finding total fitness values
     cumulativeFit = sum(chromosomeFit)
     
-    #print("cumulativeFit: + " + str(cumulativeFit))
     # Finding the precentage of each value compared to the total
     for element in chromosomeFit:
         wheelValues.append((element/cumulativeFit))
-
-    #print("chomosomeFit  : " + str(chromosomeFit))
-   # print("cumulative fit: " + str(wheelValues))
 
     # Step 2: Generate a random number
     runLoop = True          # used to run the loop until another index is found
@@ -65,7 +62,6 @@ def roulette(chromosomeFit):
 
     while(runLoop):
         randomInt = random.randint(1,100)
-        #print ("random number: " + str(randomInt))
 
         # Step 3: Go around the wheel until you get to the random number
         start = 0       # the start of the slice in the roulette wheel for a percentage (i.e. the beginning of the slice pie)
@@ -74,7 +70,6 @@ def roulette(chromosomeFit):
         for element in wheelValues:
             
             end = round((element*100 + end),2) 
-            #print("start: " + str(start) + "     end: " + str(end))
             
             # if the random number is between the start and end add it to the pair array after completing the next if statement
             if (start <= randomInt and end >= randomInt):
@@ -91,16 +86,14 @@ def roulette(chromosomeFit):
                     break
             index = index + 1
             start = end
-       # print("index: " + str(index))
 
         parentOneIndex = index
 
     # return the index of the parents that were selected
     return pair
 
-
-# verify the vertical fitness
-# By checking if the numbers have not been repeated, if it has been repeated there are queens in the same column
+# VERTICAL FUNCTION
+# verify the vertical fitness by checking if the numbers have not been repeated, if it has been repeated there are queens in the same column
 # parameter - chromosome: the one chromosome from the total population
 # return value - numOfNoRepeat: the number of times values have not been repeated (i.e. vertical fitness value)
 def vertical(chromosome):
@@ -121,14 +114,12 @@ def vertical(chromosome):
 
     numOfNoRepeat = 8 - numOfRepeat
 
-    #repeat_ratio = numOfNoRepeat/8
-    # return vertical fitness value
-
-    # print("numOfNoRepeat: " + str(repeat_ratio))
     return numOfNoRepeat
 
-
-# verify the diagonal fitness
+# DIAGONAL FUNCTION
+# verify the diagonal fitness by checking if any of the queens are diagianl from each other
+# parameter - chromosome: one chromosome from the population
+# return value - the fitness value of the diagonal criteria 
 def diagonal(chromosome):
     fitness = 0
     for i in range(len(chromosome)):
@@ -141,19 +132,17 @@ def diagonal(chromosome):
             # if the two slopes match, the two queens are on each other's diagonal paths
             if (slopeY == slopeX):
                 fitness = fitness + 1
-
-    
+ 
     fitness = 28 - fitness
-    # print("fitness: " + str(diagonal_ratio))
 
     return (fitness)
 
 
-# crossover operation
-# half of the genes from each parent crossover will switch with each other
+# CROSSOVER FUNCTION
+# The parents will switch a random number of genes with each other to create two children
+# parameter - parent1, parent2: two chromosomes from the population that have been selected using the roulette function
+# return value - children: the children created by the two parents
 def crossover(parent1, parent2):
-    # print("\n -------Crossover is performed here-------")
-
     # selecting the index where the parents need to switch genes
     crossPoint = random.randint(1, 7)
 
@@ -161,42 +150,40 @@ def crossover(parent1, parent2):
     childOne = np.append(parent1[:crossPoint], parent2[crossPoint:len(parent2)])
     childTwo = np.append(parent2[:crossPoint], parent1[crossPoint:len(parent1)])
 
-    # print("crosspoint: " + str(crossPoint))
-    # print("ParentOne: " + str(parent1) + "childOne: " + str(childOne))  # Delete this line later -> it's just for testing purposes
-    # print("ParentTwo: " + str(parent2) + "childTwo: " + str(childTwo))  # Delete this line later -> it's just for testing purposes
-
     # format the children for return
     children = np.array([childOne, childTwo])
-    # print ('children' + str(children))
-    # print("-------------End of Crossover-------------\n")
+
     return children
 
 
-# mutation operation
+# MUTATION FUNCTION
+# a gene in a chromosome and a value from 0-7 is randomely selected to be the gene of that chromosome 
+# parameter - chromosome: the chromosomes from the population that have been selected using the roulette function
+# return value - chromosome: the mutated chromosome
 def mutation(chromosome):
-    # print("\n -------------Mutation is performed here-------------")
 
     # randomly pick a gene to mutate from the chromosome
     mutated_gene = random.randrange(0, 7)
-    # print("Gene to be mutated: " + str(mutated_gene))
-    # print("The original chromosome: " + str(chromosome))
 
     # change its value to a random column
     chromosome[mutated_gene] = random.randint(0, 7)
-    # print("The mutated chromosome: " + str(chromosome))
-    # print("-------------End of Mutation-------------\n")
 
     return chromosome
 
-
+# FIND_SOLUTION FUNCTION
+# finds the solution to the 8 queen problem
+# parameters - population_size: the size of the population in each generation
+#            - g: the number of genes in each chromosomes
+#            - chromes: the chromosomes in the population
+#            - cross_prob: the probability of the crossover function occuring
+#            - mut_prob: the probability of the mutation function occuring
+# return value - new_generation: the new generation of chromosomes
 def find_solution(population_size, g, chromes, cross_prob, mut_prob):
+    
     # evaluate chromosome fitness
     fitness_array = fitness(chromes)
-    # print("fitness_array: " + str(fitness_array))
 
     # if all queens in one chromosome do not interfere with each other --> SOLUTION IS FOUND
-    # print("\n% Fitness for each chromosome: " + str(fitness_array))
-
     # make array of new generation
     new_generation = np.random.randint(8, size=(population_size, g))
 
@@ -204,15 +191,12 @@ def find_solution(population_size, g, chromes, cross_prob, mut_prob):
     # make five pairs from the original chromosomes & fitness values (using Roulette Wheel)
     for i in range(0, int(population_size / 2)):
         selected = roulette(fitness_array)
-        # print("selected: " + str(selected))
+
         # add the selected values to the new_generation array
         new_generation[row] = chromes[selected[0]]
         row = row + 1
         new_generation[row] = chromes[selected[1]]
         row = row + 1
-
-    # print("====== THE SELECTED GENERATION ======")
-    # print(str(new_generation))
 
     # randomly generate a number (0 to 1), if this is less than cross_prob, do crossover
     for i in range(0, population_size, 2):
@@ -222,8 +206,6 @@ def find_solution(population_size, g, chromes, cross_prob, mut_prob):
             # replace the children of the new generation with the crossed-over version
             new_generation[i] = children[0]
             new_generation[i + 1] = children[1]
-    # print("========= CROSSOVERED GENERATION =========")
-    # print(new_generation)
 
     # randomly generate a number (0 to 1), if this is less than mut_prob, do mutation
     for i in range(0, population_size):
@@ -231,19 +213,18 @@ def find_solution(population_size, g, chromes, cross_prob, mut_prob):
         if (rand < mut_prob):
             mutated_chromosome = mutation(new_generation[i])
             new_generation[i] = mutated_chromosome
-    # print("========= MUTATED GENERATION =========")
-    # print(new_generation)
 
     return new_generation
 
 
 if __name__ == '__main__':
     # each chromosome is comprised of eight genes, each of which corresponding to a column number
+    
+    # Declaring Variables
     # number of chromosomes
     n = 100
     # number of genes in each chromosome
     genes = 8
-
     # crossover probability
     pc = 0.7
     # mutation probability
@@ -259,9 +240,6 @@ if __name__ == '__main__':
         new_gen = find_solution(n, genes, chromosomes, pc, pm)
         chromosomes = new_gen
         gen = gen + 1
-
-    #fitness_array = fitness(chromosomes)
-    #selected = roulette(fitness_array)
 
 
 
