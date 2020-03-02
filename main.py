@@ -163,8 +163,28 @@ def find_solution(population_size, g, chromes):
     # if all queens in one chromosome do not interfere with each other --> SOLUTION IS FOUND
     print("\n% Fitness for each chromosome: " + str(fitness_array))
 
+    # make array of new generation
+    new_generation = np.random.randint(8, size=(population_size, g))
+
+    row = 0
+    # make five pairs from the original chromosomes + fitness values
     for i in range(0, int(population_size/2)):
-        print("ROUND " + str(i) + ": Selected pair is" + str(roulette(fitness_array)))
+        selected = roulette(fitness_array)
+        print("From roulette: " + str(selected))
+        print("to be changed: " + str(chromes[selected[0]]) + " and " + str(chromes[selected[1]]))
+
+        # add the selected values to the new_generation array
+        new_generation[row] = chromes[selected[0]]
+        row = row + 1
+        new_generation[row] = chromes[selected[1]]
+        row = row + 1
+
+    print("====== THE NEW GENERATION ======")
+    print(str(new_generation))
+
+
+
+
 
 
     crossover(chromosomes[0], chromosomes[1])
