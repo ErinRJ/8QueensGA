@@ -2,6 +2,7 @@ import sys
 
 import numpy as np
 import random
+import decimal
 
 
 # fitness function
@@ -41,48 +42,60 @@ def fitness(chromes):
 
 # roulette fuction
 def roulette(chromosomeFit):
-    pair = []
-    wheelValues = []
-    cumulative = 0
-    # loop through fitness values, round them, add to rounded array
-    for i in chromosomeFit:
-        cumulative = cumulative + i
-        cumulative = round(cumulative, 4)
-        wheelValues.append(cumulative)
-    # print("The cumulative array: " + str(cumulaarray))
+    pair = []           # the indices of the two parents that are choosen
+    wheelValues = []    # the precentages in the wheel  
+    cumulativeFit = 0   # the total fitness value
 
-    # point to the wheel
-    rndnumberSelect = random.uniform(0, sum(wheelValues))
-    rndnumberSelect = rndnumberSelect / 100
-    # print(rndnumberSelect)
+    # Step 1: Assigning precentages for each fitness value - for whatever reason the sum (i.e. cumulativeFit) does not give the correct value
+    
+    # Finding total fitness values
+    cumulativeFit = sum(chromosomeFit)
+    
+    #print("cumulativeFit: + " + str(cumulativeFit))
+    # Finding the precentage of each value compared to the total
+    for element in chromosomeFit:
+        wheelValues.append(round((element/cumulativeFit),4))
 
-    index = 0
-    for i in wheelValues:
-        if i >= rndnumberSelect:
-            parent_one = index
-            parent_two = parent_one
-            break
-        index = index + 1
+    #print("chomosomeFit  : " + str(chromosomeFit))
+   # print("cumulative fit: " + str(wheelValues))
 
-    pair.append(parent_one)
+    # Step 2: Generate a random number
+    runLoop = True          # used to run the loop until another index is found
+    ParentOneIndex = -1     # indicates the index for one parent (it's essentially used to make sure the 2nd parent is not the same as the first)
 
-    while (parent_one == parent_two):
-        rndnumberSelect2 = random.randint(0, 101)
-        rndnumberSelect2 = rndnumberSelect2 / 100
-        # print(rndnumberSelect2)
+    while(runLoop):
+        randomInt = random.randint(1,100)
+        #print ("random number: " + str(randomInt))
 
-        index2 = 0
-        for i in wheelValues:
-            if i >= rndnumberSelect2:
-                parent_two = index2
-                break
-            index2 = index2 + 1
+        # Step 3: Go around the wheel until you get to the random number
+        start = 0       # the start of the slice in the roulette wheel for a percentage (i.e. the beginning of the slice pie)
+        end = 0         # the end of the slice in the roulette wheel for a percentage (i.e. the end of the slice pie)
+        index = 0       # indicates the element in the roulette wheel (i.e. the specific slice)
+        for element in wheelValues:
+            
+            end = round((element*100 + end),2) 
+            #print("start: " + str(start) + "     end: " + str(end))
+            
+            # if the random number is between the start and end add it to the pair array after completing the next if statement
+            if (start <= randomInt and end >= randomInt):
+                # if parentOne has not been selected add the index to the pair array and break from for loop
+                if (ParentOneIndex == -1):
+                    pair.append(index)
+                    ParentOneIndex = index
+                    break
+                # if parentOne has an index and it's not the same as the selected index add it to the pair array and break from loop
+                elif (index != parentOneIndex):
+                   # print("parentOne: " + str(parentOneIndex))
+                    pair.append(index)
+                    runLoop = False
+                    break
+            index = index + 1
+            start = end
+       # print("index: " + str(index))
 
-        if (parent_two != parent_one):
-            break
+        parentOneIndex = index
 
-    pair.append(parent_two)
-
+    # return the index of the parents that were selected
     return pair
 
 
@@ -171,6 +184,7 @@ def mutation(chromosome):
 def find_solution(population_size, g, chromes, cross_prob, mut_prob):
     # evaluate chromosome fitness
     fitness_array = fitness(chromes)
+    print("fitness_array: " + str(fitness_array))
 
     # if all queens in one chromosome do not interfere with each other --> SOLUTION IS FOUND
     # print("\n% Fitness for each chromosome: " + str(fitness_array))
@@ -182,7 +196,7 @@ def find_solution(population_size, g, chromes, cross_prob, mut_prob):
     # make five pairs from the original chromosomes & fitness values (using Roulette Wheel)
     for i in range(0, int(population_size / 2)):
         selected = roulette(fitness_array)
-
+        print("selected: " + str(selected))
         # add the selected values to the new_generation array
         new_generation[row] = chromes[selected[0]]
         row = row + 1
@@ -237,6 +251,11 @@ if __name__ == '__main__':
         new_gen = find_solution(n, genes, chromosomes, pc, pm)
         chromosomes = new_gen
         gen = gen + 1
+
+    #fitness_array = fitness(chromosomes)
+    #selected = roulette(fitness_array)
+
+
 
 
 
