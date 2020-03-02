@@ -54,7 +54,7 @@ def roulette(chromosomeFit):
     #print("cumulativeFit: + " + str(cumulativeFit))
     # Finding the precentage of each value compared to the total
     for element in chromosomeFit:
-        wheelValues.append(round((element/cumulativeFit),4))
+        wheelValues.append((element/cumulativeFit))
 
     #print("chomosomeFit  : " + str(chromosomeFit))
    # print("cumulative fit: " + str(wheelValues))
@@ -120,7 +120,11 @@ def vertical(chromosome):
         count = 0
 
     numOfNoRepeat = 8 - numOfRepeat
+
+    #repeat_ratio = numOfNoRepeat/8
     # return vertical fitness value
+
+    # print("numOfNoRepeat: " + str(repeat_ratio))
     return numOfNoRepeat
 
 
@@ -138,7 +142,10 @@ def diagonal(chromosome):
             if (slopeY == slopeX):
                 fitness = fitness + 1
 
+    
     fitness = 28 - fitness
+    # print("fitness: " + str(diagonal_ratio))
+
     return (fitness)
 
 
@@ -160,6 +167,7 @@ def crossover(parent1, parent2):
 
     # format the children for return
     children = np.array([childOne, childTwo])
+    # print ('children' + str(children))
     # print("-------------End of Crossover-------------\n")
     return children
 
@@ -184,7 +192,7 @@ def mutation(chromosome):
 def find_solution(population_size, g, chromes, cross_prob, mut_prob):
     # evaluate chromosome fitness
     fitness_array = fitness(chromes)
-    print("fitness_array: " + str(fitness_array))
+    # print("fitness_array: " + str(fitness_array))
 
     # if all queens in one chromosome do not interfere with each other --> SOLUTION IS FOUND
     # print("\n% Fitness for each chromosome: " + str(fitness_array))
@@ -196,7 +204,7 @@ def find_solution(population_size, g, chromes, cross_prob, mut_prob):
     # make five pairs from the original chromosomes & fitness values (using Roulette Wheel)
     for i in range(0, int(population_size / 2)):
         selected = roulette(fitness_array)
-        print("selected: " + str(selected))
+        # print("selected: " + str(selected))
         # add the selected values to the new_generation array
         new_generation[row] = chromes[selected[0]]
         row = row + 1
@@ -232,7 +240,7 @@ def find_solution(population_size, g, chromes, cross_prob, mut_prob):
 if __name__ == '__main__':
     # each chromosome is comprised of eight genes, each of which corresponding to a column number
     # number of chromosomes
-    n = 10
+    n = 100
     # number of genes in each chromosome
     genes = 8
 
@@ -247,7 +255,7 @@ if __name__ == '__main__':
     # surround the following function call in a while loop which breaks once a solution is found
     gen = 0
     while(True):
-        print("Generation: " + str(gen))
+        print("Generation: " + str(gen) + "\n")
         new_gen = find_solution(n, genes, chromosomes, pc, pm)
         chromosomes = new_gen
         gen = gen + 1
